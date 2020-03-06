@@ -1,5 +1,7 @@
 \documentclass[a4paper]{article}
 \usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[section]
@@ -11,6 +13,16 @@
 \begin{document}
 
 \maketitle
+
+\abstract
+Bayesian learning is an active field of machine learning.
+It estimates parameters of known distribution rather than calculates coefficients directly.
+This article is a shallow instance of Bayesian learning.
+It shows how to estimate success rate with strong prior knowledge in Bernoulli experiment.
+Inevitably, it involves Beta distribution, Bernoulli distribution and their relationship of being conjugate prior pair.
+Additionally, it contains the calculation of the integral of Beta function using $\Gamma$ function, which provides an easy path to calculate the expectation of mean and variance of Beta distribution.
+
+\tableofcontents
 
 \section{Beta distribution}
 The \emph{Beta distribution} can be used to a conjugate prior\footnote{Conjugate prior. Suppose we have data with likelihood function $f(x|\theta)$ depending on a hypothesized parameter. Also suppose the prior distribution for $\theta$ is one of a family of parametrized distributions. If the posterior distribution for $\theta$ is in this family then we say the the prior is a conjugate prior for the likelihood.} to \emph{Bernoulli distribution}.
@@ -35,11 +47,11 @@ Thus, the probability density function of Beta distribution can be expressed as
 \end{equation}
 
 \section{Beta function}
-The \emph{Beta function}\footnote{beta function is also known as Euler's integral of the first kind} is important in calculus and analysis due to its close connection to the $\Gamma$ function, which is itself a generalization of the factorial function.
+The \emph{Beta function}\footnote{Beta function is also known as Euler's integral of the first kind} is important in calculus and analysis due to its close connection to the $\Gamma$ function, which is itself a generalization of the factorial function.
 Many complex integrals can be reduced to expressions involving the beta function.
 
 \subsection{Definition}
-The Beta function, denoted by \(B(x, y)\), is defined as
+The Beta function, denoted by $B(x, y)$, is defined as
 \begin{equation}
     B(\alpha, \beta) := \int_{0}^{1} t^{\alpha-1} (1-t)^{\beta-1} dt
     \label{eq: Beta function}
@@ -124,7 +136,15 @@ In $N$ experiments, the probability of obtaining $n$ successes is
     P(N, n) = \binom{N}{n} p^n (1-p)^{N-n}
 \end{equation}
 
-\section{Relationship between Beta and Bernoulli distributions}
+To estimate the value of $p$ based on $N$ and $n$, we can apply MLE \footnote{MLE: Maximum Likelihood Estimation} method, in this case MLE is to solve $p = \hat{p}$ when it maximizes $P(N, n)$.
+\begin{equation}
+    \hat{p} = \argmax_{p} P(N, n)
+\end{equation}
+
+The solution can be obtained with $\frac{\partial}{\partial{\hat{p}}} P(N, n) = 0$ yields $\hat{p} = \frac{n}{N}$.
+We will explain why in the following.
+
+\section{Beta and Bernoulli distributions}
 
 \subsection{Bayes' Theorem and Conditional Probability}
 \emph{Bayes' theorem} is a formula that describes how to update the probabilities of hypotheses when given evidence. It follows simply from the axioms of conditional probability, but can be used to powerfully reason about a wide range of problems involving belief updates.
@@ -156,6 +176,7 @@ The expectation of mean and variance of $p$ is obvious when $\alpha$ and $\beta$
 \end{equation}
 \begin{equation}
     D(p) = \frac{\alpha\beta}{(\alpha+\beta+1)(\alpha+\beta)^2}
+    \label{eq: variance of Beta function}
 \end{equation}
 
 
@@ -195,6 +216,7 @@ where $H$ refers the assumption that probability of success is $p$, $E$ refers o
 We can write prior probability as following
 \begin{equation}
     P(H) \propto p^{\alpha-1} (1-p)^{\beta-1}
+    \label{eq: Prior probability}
 \end{equation}
 
 Applying Bayes' theorem we have
@@ -203,9 +225,29 @@ Applying Bayes' theorem we have
 \end{equation}
 where the denominator is simplified as a constant $\mathcal{C}$. The simplify is reasonable since the $P(E)$ is invariant with respect to $p$, despite its difficulty to solve.
 
-It turns out that $P(H|E)$ can be write as
+It turns out that $P(H|E)$ is proportional to Beta function family as following
 \begin{equation}
     P(H|E) \propto p^{n + \alpha - 1} (1-p)^{N - n + \beta - 1}
 \end{equation}
+applying substitution of $\alpha^{'} = n + \alpha$ and $\beta^{'} = N - n + \beta$, and denominator of Beta function, we have
+\begin{equation}
+    P(H|E) = \frac{p^{\alpha^{'}-1} (1-p)^{\beta^{'}-1}}{B(\alpha^{'}, \beta^{'})}
+    \label{eq: Posterior probability}
+\end{equation}
+we can see that the posterior probability $P(H|E)$ and prior probability $P(H)$ are from the same distribution family.
+
+\subsection{Bayesian learning}
+The way we apply Bayes' theorem using conjugate prior is the idea of Bayesian learning.
+We can not say which is better, Bayesian learning or MLE.
+However, we can say the Bayesian learning method is more stable since it yields smaller variance.
+The smaller variance is because Bayesian learning method uses the prior knowledge (\ref{eq: Prior probability}).
+In prior, we assumed that $p$ is variable and centered on the point of $\frac{\alpha}{\alpha + \beta}$.
+After we obtained the evidence that $n$ out of $N$ successes, we formulate a closer estimation in (\ref{eq: Posterior probability}).
+It can be found that the new estimation has much lower variance (\ref{eq: variance of Beta function}), since $\alpha^{'} > n$ and $\alpha^{'} + \beta^{'} > N$.
+
+This explains another different between MLE and Bayesian learning method.
+MLE is more like a pure data driven method, it estimate coefficients based on only observed data.
+Bayesian learning uses data as adjustment for prior, the more data obtained the larger adjustment can be made.
+The adjustment strategy may provide a robust estimation against arbitrary noisy.
 
 \end{document}
