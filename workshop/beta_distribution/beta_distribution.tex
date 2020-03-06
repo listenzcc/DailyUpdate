@@ -4,6 +4,8 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{float}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}{Lemma}[section]
 
@@ -41,10 +43,18 @@ To guarantee that the integral of $P(x)$ is $1$, and we have
 where $B(\alpha, \beta)$ is Beta function.
 The guarantee is based on a theorem, we will prove it in later.
 
-Thus, the probability density function of Beta distribution can be expressed as
+Thus, the probability density function of Beta distribution can be expressed as 
 \begin{equation}
     Beta(x; \alpha, \beta) = \frac{x^{\alpha-1} (1-x)^{\beta-1}}{B(\alpha, \beta)}
 \end{equation}
+
+The overlook of Beta distribution among different parameters combinations is drawn as Fig.\ref{fig: Beta distribution}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.5\textheight]{beta_distribution.png}
+    \caption{Beta distribution among different parameters combinations}
+    \label{fig: Beta distribution}
+\end{figure}
 
 \section{Beta function}
 The \emph{Beta function}\footnote{Beta function is also known as Euler's integral of the first kind} is important in calculus and analysis due to its close connection to the $\Gamma$ function, which is itself a generalization of the factorial function.
