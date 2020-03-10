@@ -8,6 +8,7 @@
 \usepackage{float}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}{Proposition}[section]
 
 \title{Information Theory}
 \author{listenzcc}
@@ -22,7 +23,7 @@ Not done yet.
 
 \tableofcontents
 
-\section{Information Theory}
+\section{Information Entropy}
 Information Theory is one of the few scientific fields fortunate enough to have an identifiable beginning - Claude Shannon's 1948 paper.
 \begin{quote}
     What made possible, what induced the development of coding as a theory, and
@@ -38,45 +39,47 @@ For a given distribution $X ~ P(X)$, a single symbol $x$ can explain the amount 
 \end{equation}
 where the base of $\log{}$ is arbitrary. Usually we use $2$ as the base, and unit of the information quantity is called $bytes$.\footnote{The $\log{}$ in this manuscript uses the base of $2$ if not specified.}
 
-The expectation of the mean of the information quantity is information entropy (or Shannon entropy)
+\subsection{Shannon Entropy}
+The expectation of the mean of the information quantity is information entropy (or \emph{Shannon entropy})
 \begin{equation}
     H(X) = \int_{X} p(x) I(x) dx
-    \label{eq: Information Entropy X}
+    \label{eq: X}
 \end{equation}
 
 \begin{theorem}
     The information entropy is maximized when all the symbols occurs in equal probabilities.
     In a discrete situation, $X$ has $n$ possible values. When $p(x) = \frac{1}{n}$, the information entropy is maximized.
+
+    \begin{proof}
+        Re-write information entropy as
+        \begin{equation*}
+            H(x) = - \mathcal{C} \sum_{i=1}^{n} p(x_{i}) \ln{p(x_{i})}
+        \end{equation*}
+        where $\mathcal{C}$ is a constant which guarantee $\mathcal{C} \ln{p} = \log{p}$ when $0<p<1$.
+        To maximizing the information entropy, there is another constraint that $\sum_{i=1}^{n} p(x) = 1$.
+
+        Use Lagrangian method to solve the constrained maximizing problem.
+        Formulate Lagrangian function
+        \begin{equation*}
+            \mathcal{L}(x) = H(x) + \lambda(\sum_{i=1}^{n} p(x_{i}) - 1)
+        \end{equation*}
+        where $\lambda$ is unsolved constant.
+
+        Calculate the partial differential of $\mathcal{L}(x)$ to $p(x_{i})$
+        \begin{equation*}
+            \frac{\partial}{\partial{p(x_{i})}} {H} = \lambda - \mathcal{C} \ln{p(x_{i})} + \mathcal{C}
+        \end{equation*}
+        the maximizing of information entropy is equivalent to the partial differentials equal to zero for each $i \in [1, 2, \dots, n]$.
+
+        Since $\lambda$ is constant, we have
+        \begin{equation*}
+            p(x_{i}) = p(x_{j}) = p(x)
+        \end{equation*}
+        for each $i \neq j$ and $i, j \in [1, 2, \dots, n]$.
+        Hence proved.
+    \end{proof}
+
 \end{theorem}
-
-\begin{proof}
-    Re-write information entropy as
-    \begin{equation*}
-        H(x) = - \mathcal{C} \sum_{i=1}^{n} p(x_{i}) \ln{p(x_{i})}
-    \end{equation*}
-    where $\mathcal{C}$ is a constant which guarantee $\mathcal{C} \ln{p} = \log{p}$ when $0<p<1$.
-    To maximizing the information entropy, there is another constraint that $\sum_{i=1}^{n} p(x) = 1$.
-
-    Use Lagrangian method to solve the constrained maximizing problem.
-    Formulate Lagrangian function
-    \begin{equation*}
-        \mathcal{L}(x) = H(x) + \lambda(\sum_{i=1}^{n} p(x_{i}) - 1)
-    \end{equation*}
-    where $\lambda$ is unsolved constant.
-
-    Calculate the partial differential of $\mathcal{L}(x)$ to $p(x_{i})$
-    \begin{equation*}
-        \frac{\partial}{\partial{p(x_{i})}} {H} = \lambda - \mathcal{C} \ln{p(x_{i})} + \mathcal{C}
-    \end{equation*}
-    the maximizing of information entropy is equivalent to the partial differentials equal to zero for each $i \in [1, 2, \dots, n]$.
-
-    Since $\lambda$ is constant, we have
-    \begin{equation*}
-        p(x_{i}) = p(x_{j}) = p(x)
-    \end{equation*}
-    for each $i \neq j$ and $i, j \in [1, 2, \dots, n]$.
-    Hence proved.
-\end{proof}
 
 In the sense of above analysis, we can see that the information entropy can be considered as the minimized code length of a communication system.
 To make sure the system reaches the minimized code length, an efficient way is to design it making sure all the symbols are happening with equal possibility.
@@ -85,28 +88,29 @@ Here is another question to be answered: how many symbols do we have to use in t
 \begin{theorem}
     The best number of symbols in a equal possibility system is $e$.
     The value can maximize the information quantity of a single symbol.
+
+    \begin{proof}
+        Re-write the information entropy in a equal possibility discrete system.
+        \begin{equation*}
+            H(x) = - \mathcal{C} \sum_{i=1}^{n} p \ln{p}
+        \end{equation*}
+        where $p = p(x_{i}) = \frac{1}{n}$ for $i \in [1, 2, \dots, n]$.
+
+        Since all the symbols have the same probability, the information quantity of a single symbol can be wrote as
+        \begin{equation*}
+            I = \mathcal{C} \frac{1}{n} \ln{n}
+        \end{equation*}
+
+        Calculate the partial derivative by $n$, we have
+        \begin{equation*}
+            \frac{\partial}{\partial{n}} I = \mathcal{C} (\frac{1}{n^{2}} - \frac{1}{n^{2}} \ln{n})
+        \end{equation*}
+        one can see that $n=e$ can make $\frac{\partial}{\partial{n}} I = 0$, and the $2^{nd}-order$ partial is negative when $n=e$.
+        It turns out that the value maximizes the information being carried by single symbol.
+        Hence proved.
+    \end{proof}
+
 \end{theorem}
-
-\begin{proof}
-    Re-write the information entropy in a equal possibility discrete system.
-    \begin{equation*}
-        H(x) = - \mathcal{C} \sum_{i=1}^{n} p \ln{p}
-    \end{equation*}
-    where $p = p(x_{i}) = \frac{1}{n}$ for $i \in [1, 2, \dots, n]$.
-
-    Since all the symbols have the same probability, the information quantity of a single symbol can be wrote as
-    \begin{equation*}
-        I = \mathcal{C} \frac{1}{n} \ln{n}
-    \end{equation*}
-
-    Calculate the partial derivative by $n$, we have
-    \begin{equation*}
-        \frac{\partial}{\partial{n}} I = \mathcal{C} (\frac{1}{n^{2}} - \frac{1}{n^{2}} \ln{n})
-    \end{equation*}
-    one can see that $n=e$ can make $\frac{\partial}{\partial{n}} I = 0$, and the $2^{nd}-order$ partial is negative when $n=e$.
-    It turns out that the value maximizes the information being carried by single symbol.
-    Hence proved.
-\end{proof}
 
 \section{Mutual Information}
 
@@ -114,7 +118,7 @@ In practice, one may concerns the interaction between several variables.
 We can start with two variables.
 The simplest situation is that two variables are independent with each other.
 
-\paragraph{Independent variables}
+\subsection{Independent variables}
 
 If $X$ and $Y$ are independent with each other, the joint probability can be expressed as
 \begin{equation}
@@ -125,64 +129,169 @@ which is a necessary condition of independence, although not sufficient.
 
 \begin{theorem}
     The information entropy of independent variables equals to the summation of each information entropy.
+
+    \begin{proof}
+        The information entropy of $X$ and $Y$ can be expressed as
+        \begin{equation}
+            H(X, Y) = - \int_{X} \int_{Y} P(x, y) \log(P(x, y)) dx dy
+        \end{equation}
+        use (\ref{eq: Joint Probability of Independent Variables}), we have
+        \begin{equation}
+            H(X, Y) = - \int_{X} P(x) \log(P(x)) dx - \int_{Y} P(y) \log(P(y)) dy
+        \end{equation}
+        the equation also uses the fact that $\int_{Y} P(x, y) dy = P(x)$.
+        Use the definition in (\ref{eq: X}) we have
+        \begin{equation*}
+            H(X, Y) = H(X) + H(Y)
+        \end{equation*}
+
+        Hence proved.
+    \end{proof}
+
 \end{theorem}
 
-\begin{proof}
-    The information entropy of $X$ and $Y$ can be expressed as
-    \begin{equation}
-        H(X, Y) = - \int_{X} \int_{Y} P(x, y) \log(P(x, y)) dx dy
-    \end{equation}
-    use (\ref{eq: Joint Probability of Independent Variables}), we have
-    \begin{equation}
-        H(X, Y) = - \int_{X} P(x) \log(P(x)) dx - \int_{Y} P(y) \log(P(y)) dy
-    \end{equation}
-    the equation also uses the fact that $\int_{Y} P(x, y) dy = P(x)$.
-    Use the definition in (\ref{eq: Information Entropy X}) we have
-    \begin{equation*}
-        H(X, Y) = H(X) + H(Y)
-    \end{equation*}
-
-    Hence proved.
-\end{proof}
-
-\paragraph{Dependent variables}
+\subsection{Dependent variables}
 If $X$ and $Y$ are not independent, the mutual information can be expressed as
 \begin{equation}
     I(X; Y) = \int_{X} \int_{Y} p(x, y) \log{\frac{p(x, y)}{p(x)p(y)} dx dy}
     \label{eq: Multual Information}
 \end{equation}
 
-The meaning of mutual information is the uncertainty of one variable solved by another variable.
+The meaning of mutual information is the uncertainty of one variable solved by the fact of knowing another variable.
 
 \begin{theorem}
     The mutual information is symmetrical
     \begin{equation}
         I(X; Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)
     \end{equation}
+
+    \begin{proof}
+        Re-write (\ref{eq: Multual Information}) we have
+        \begin{equation*}
+            I(X; Y) = \int_{X} \int_{Y} p(x, y) \log{p(x, y)} dx dy - \int_{X} p(x) \log{p(x)} dx - \int_{Y} p(y) \log{p(y) dy}
+        \end{equation*}
+
+        Start with $H(Y|X)$, it is the information entropy of conditional probability.
+        \begin{equation*}
+            H(Y|X) = - \int_{X} \int_{Y} p(y, x) \log{p(y|x)} dx dy
+        \end{equation*}
+        calculate further
+        \begin{equation*}
+            H(Y|X) = - \int_{X} \int_{Y} p(y, x) \log{p(y, x)} dx dy + \int_{X} p(x) \log{p(x)} dx
+        \end{equation*}
+
+        Easy to obtain
+        \begin{equation*}
+            H(Y|X) + I(X; Y) = H(Y)
+        \end{equation*}
+
+        Reverse is the same.
+        if we start with $H(X|Y)$, it will yield $H(X|Y) + I(X; Y) = H(X)$.
+        Hence proved.
+    \end{proof}
+
 \end{theorem}
 
-\begin{proof}
-    Re-write (\ref{eq: Multual Information}) we have
-    \begin{equation*}
-        I(X; Y) = \int_{X} \int_{Y} p(x, y) \log{p(x, y)} dx dy - \int_{X} p(x) \log{p(x)} dx - \int_{Y} p(y) \log{p(y) dy}
-    \end{equation*}
+\begin{theorem}
+    \label{theorem: Entropy of Conditional Distribution}
+    The entropy of conditional distribution is
+    \begin{equation}
+        H(X|Y) = H(X, Y) - H(Y)
+        \label{eq: Entropy of Conditional Distribution}
+    \end{equation}
 
-    Start with $H(Y|X)$, it is the information entropy of conditional probability.
-    \begin{equation*}
-        H(Y|X) = - \int_{X} \int_{Y} p(y, x) \log{p(y|x)} dx dy
-    \end{equation*}
-    calculate further
-    \begin{equation*}
-        H(Y|X) = - \int_{X} \int_{Y} p(y, x) \log{p(y, x)} dx dy + \int_{X} p(x) \log{p(x)} dx
-    \end{equation*}
+    \begin{proof}
+        It is more like a definition, we can only provide simple proof here.
+        The entropy of conditional distribution can be \emph{defined} as
+        \begin{equation*}
+            H(X|Y) = - \int_{X} \int_{Y} p(x, y) \log{\frac{p(x, y)}{p(y)}} dx dy
+        \end{equation*}
+        thus we have
+        \begin{equation*}
+            H(X|Y) = - \int_{X} \int_{Y} p(x, y) \log{p(x, y)} dx dy + \int_{X} p(x) \log{p(x)} dx
+        \end{equation*}
 
-    Easy to obtain
-    \begin{equation*}
-        H(Y|X) + I(X; Y) = H(Y)
-    \end{equation*}
+        Hence proved.
+    \end{proof}
+\end{theorem}
 
-    It is the same if we start with $H(X|Y)$, it will yield $H(X|Y) + I(X; Y) = H(X)$.
-    Hence proved.
-\end{proof}
+\begin{lemma}
+    The mutual information can also being expressed as following
+    \begin{equation}
+        I(X; Y) = H(X) + H(Y) - H(X, Y)
+    \end{equation}
+    \begin{equation}
+        I(X; Y) = H(X, Y) - H(X|Y) - H(Y|X)
+    \end{equation}
+\end{lemma}
 
+\section{Transfer Entropy}
+Every system has its own trivial dynamic.
+If we want to measure the impact from \emph{input}, the self-dynamic should be \emph{zeroed-out}.
+
+\subsection{Definition}
+
+The \emph{Transfer Entropy} is an useful measurement for the \emph{pure} impact.
+\begin{equation}
+    T_{X \rightarrow Y} = H(Y|\overline{Y}) - H(Y|\overline{Y}, X)
+    \label{eq: Transfer Entropy}
+\end{equation}
+where $Y$ refers the variable we are interested in, $\overline{Y}$ refers the history state of the variable $Y$, $X$ refers the impact factor.
+
+To be more clear, $H(Z|X, Y)$ means the conditional entropy of $Z$ given $(X, Y)$, not any other wise.
+
+One meaning of transfer entropy is the amount of uncertainty solved by input variable $X$ regardless the history state of the system.
+
+\subsection{Calculating}
+Applying (\ref{eq: Entropy of Conditional Distribution}) we have the method of computing transfer entropy
+\begin{equation}
+    T_{X \rightarrow Y} = H(Y, \overline{Y}) - H(\overline{Y}) - H(Y, \overline{Y}, X) + H(\overline{Y}, X)
+\end{equation}
+\begin{equation}
+    T_{X \rightarrow Y} = \int_{X} \int_{\overline{Y}} \int_{Y} p(x, \overline{y}, y) \log{\frac{p(x, \overline{y}, y) p(y)}{p(x, y) p(\overline{y}, y)}} dx d\overline{y} dy
+\end{equation}
+
+\section{Relative Entropy}
+The \emph{Relative Entropy} is a measurement of the different between two distributions.
+In theory word, relative entropy is the additional information we need to fully solve the uncertainty of the distribution $P(X)$ using the optimized symbol system derived from distribution $Q(X)$.
+
+The entropy of an already known distribution $Q(X)$ is
+\begin{equation*}
+    H(X) = - \int_{X} q(x) \log{q(x)} dx
+\end{equation*}
+according to the meaning of shannon entropy, the entropy represents the optimizing minimized coding length of the system sending the symbols following $Q(X)$.
+However, the minimization can be reached only when the underlying unknown distribution $P(X)$ matches with the known one $Q(X)$.
+When the condition is not met, we have
+\begin{equation}
+    H^{'}(X) = - \int_{X} p(x) \log{q(x)} dx
+\end{equation}
+where the new entropy is definitely not smaller than the original one of $Q(X)$. The subtraction is \emph{Relative Entropy}
+\begin{equation}
+    H_{q \mapsto p} = \int_{X} p(x) \log{\frac{p(x)}{q(x)}} dx
+    \label{eq: Relative Entropy}
+\end{equation}
+
+\begin{theorem}
+    The relative entropy is non-negative
+    \begin{equation}
+        H_{q \mapsto p} \geqslant 0
+    \end{equation}
+
+    \begin{proof}
+        Re-write relative entropy as
+        \begin{equation*}
+            H_{q \mapsto p} = - \int_{X} p(x) \log{\frac{q(x)}{p(x)}} dx
+        \end{equation*}
+        since $\log{}$ is convex function, we have
+        \begin{equation*}
+            \log{\sum{x, y, \dots}} \geqslant \sum{\log(x), \log(y), \dots}
+        \end{equation*}
+        thus we can exchange the $\log{}$ outside the integral, and transform the equational into following
+        \begin{equation*}
+            H_{q \mapsto p} \geqslant - \log{\int_{X} p(x) \frac{q(x)}{p(x)} dx}
+        \end{equation*}
+        use the trivial condition that $\int_{X} q(x) dx \leqslant 1$ and $\log{1} = 0$, we have $H_{q \mapsto p} \geqslant 0$.
+        Hence proved.
+    \end{proof}
+\end{theorem}
 \end{document}
