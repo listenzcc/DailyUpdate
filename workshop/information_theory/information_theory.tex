@@ -19,7 +19,10 @@
 
 
 \abstract
-Not done yet.
+This manuscript gives a brief introduction of \emph{Information Entropy}.
+It can be used as a manual of how to calculate \emph{Shannon Entropy}, \emph{Mutual Information}, \emph{Transfer Entropy} and \emph{Relative Entropy}.
+Brief proofs of the key concepts are also provides.
+In practice, one can also use the \emph{entropy.py} besides this manuscript to calculate the Information Entropy above.
 
 \tableofcontents
 
@@ -252,8 +255,11 @@ Applying (\ref{eq: Entropy of Conditional Distribution}) we have the method of c
 \end{equation}
 
 \section{Relative Entropy}
+
+\subsection{Definition}
+
 The \emph{Relative Entropy} is a measurement of the different between two distributions.
-In theory word, relative entropy is the additional information we need to fully solve the uncertainty of the distribution $P(X)$ using the optimized symbol system derived from distribution $Q(X)$.
+In formal words, relative entropy is the additional information we need to fully solve the uncertainty of the distribution $P(X)$ using the optimized symbol system derived from distribution $Q(X)$.
 
 The entropy of an already known distribution $Q(X)$ is
 \begin{equation*}
@@ -270,6 +276,10 @@ where the new entropy is definitely not smaller than the original one of $Q(X)$.
     H_{q \mapsto p} = \int_{X} p(x) \log{\frac{p(x)}{q(x)}} dx
     \label{eq: Relative Entropy}
 \end{equation}
+
+In practice, the Relative Entropy is widely used for measuring the \emph{distance} between two distributions. The smaller value of Relative Entropy, the closer. The minimal value of Relative Entropy is $0$.
+
+\subsection{Non-negative}
 
 \begin{theorem}
     The relative entropy is non-negative
