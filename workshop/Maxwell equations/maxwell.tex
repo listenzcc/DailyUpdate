@@ -58,11 +58,11 @@
 
 \begin{frame}
     \frametitle{Scalar and vector field}
-    An example of scalar (*temperature*) and vector (*heat transfer*) field.
+    An example of scalar (\emph{temperature}) and vector (\emph{heat transfer}) field.
     \begin{figure}[H]
         \centering
         \includegraphics[height=0.5\textheight]{heatmap.png}
-        \caption{Heat Map}
+        \caption{Heat Map. left: temperature, right: heat transfer}
         \label{fig: Heat map}
     \end{figure}
 \end{frame}
@@ -377,14 +377,43 @@
 
 \begin{frame}
     \frametitle{Co-register}
+    The first thing is to co-register the two coordinate
+    \begin{itemize}
+        \item The cortex coordinate, where the source currents are
+        \begin{itemize}
+            \item Sphere model
+            \item Structure MRI model
+            \item $\dots$
+        \end{itemize}
+        \item The EEG cap coordinate, where the EEG sensors are
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
     \frametitle{Gain matrix}
+    Calculate a \emph{Gain Matrix} using the forward model
+    \begin{equation}
+        Gain Matrix \quad G \in \mathfrak{R}^{m, n}
+    \end{equation}
+    where $m$ is the number of EEG sensors, $n$ is the number of source currents.
+
+    $G_{i, j}$ refers the $\vec{E}$ detected by $i^{th}$ EEG sensor caused by $j^{th}$ source current.
+
+    In another word, the EEG signal were considered as a \emph{linear combination} of source currents.
 \end{frame}
 
 \begin{frame}
     \frametitle{Solution}
+    The \emph{Source location} problem can be formulated as
+    \begin{equation}
+        \mathop{\arg\min}_{\vec{W}}
+        \left\lVert {\vec{Y} - G \cdot \vec{W}} \right\rVert ^{2} _{2} + loss(\vec{W})
+    \end{equation}
+    where $\vec{Y} \in \mathfrak{R}^{m, 1}$ is the EEG signal, $\vec{W} \in \mathfrak{R}^{n, 1}$ is the strong of source currents.
+
+    The problem is $\vec{G}$ has more rows than columns, it makes the solution can be variable.
+
+    So, using proper $loss$ function, like \emph{sparse loss} is necessary.
 \end{frame}
 
 \end{document}
