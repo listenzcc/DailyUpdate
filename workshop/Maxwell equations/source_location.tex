@@ -5,16 +5,11 @@
 \usetheme{Warsaw}
 
 
-\title{Maxwell Equations}
-\author{listenzcc}
+\title{Source Location}
+\author{listenzcc \inst{1}}
 \institute[VFU] % (optional)
 {
-  \inst{1}%
-  Faculty of Physics\\
-  Very Famous University
-  \and
-  \inst{2}%
-  Faculty of Chemistry\\
+  \inst{1}
   Very Famous University
 }
 
@@ -26,18 +21,15 @@
 
 \begin{frame}
     \frametitle{Table of Contents}
-    \tableofcontents
+    \tableofcontents[hideallsubsections]
 \end{frame}
 
-
 \section{Prepare Knowledge}
-\AtBeginSection[]
-{
-    \begin{frame}
-        \frametitle{Table of Contents}
-        \tableofcontents[currentsection]
-    \end{frame}
-}
+\begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection, hideothersubsections]
+\end{frame}
+\subsection{Definition}
 
 \begin{frame}
     \frametitle{Scalar and vector field}
@@ -56,20 +48,22 @@
         Like \emph{velocity} field.
     \end{block}
 
-    \pause
     How does scalar or vector field change along spatial dimensions?
 \end{frame}
 
 \begin{frame}
     \frametitle{Scalar and vector field}
-    An example
+    An example of scalar (\emph{temperature}) and vector (\emph{heat transfer}) field.
     \begin{figure}[H]
         \centering
         \includegraphics[height=0.5\textheight]{heatmap.png}
-        \caption{Heat Map}
+        \caption{Heat Map. left: temperature, right: heat transfer}
         \label{fig: Heat map}
     \end{figure}
 \end{frame}
+
+
+\subsection{Operators}
 
 \begin{frame}
     \frametitle{Nabla operator $\nabla$}
@@ -95,7 +89,7 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Gradient, diverence, curl}
+    \frametitle{Gradient, divergence, curl}
 
     \begin{block}{Gradient}
         \begin{equation}
@@ -123,14 +117,13 @@
 \end{frame}
 
 \section{Maxwell Equations}
-\AtBeginSection[]
-{
-    \begin{frame}
-        \frametitle{Table of Contents}
-        \tableofcontents[currentsection]
-    \end{frame}
-}
 
+\begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection, hideothersubsections]
+\end{frame}
+
+\subsection{Definition}
 \begin{frame}
     \frametitle{Definition}
     Maxwell Equations describe the dynamic of Electromagnetic Wave.
@@ -139,15 +132,19 @@
         \column{0.5\textwidth}
         \begin{equation}
             \nabla \cdot \vec{D} = \rho
+            \label{eq: me D}
         \end{equation}
         \begin{equation}
             \nabla \cdot \vec{B} = 0
+            \label{eq: me B}
         \end{equation}
         \begin{equation}
             \nabla \times \vec{E} = - \frac{\partial{\vec{B}}}{\partial{t}}
+            \label{eq: me E}
         \end{equation}
         \begin{equation}
             \nabla \times \vec{H} = \frac{\partial{\vec{D}}}{\partial{t}} + \vec{J}
+            \label{eq: me H}
         \end{equation}
 
         \column{0.5\textwidth}
@@ -172,6 +169,18 @@
     where $\vec{B} = \mu \vec{H}$, $\vec{D} = \epsilon \vec{E}$.
 \end{frame}
 
+\begin{frame}
+    \frametitle{Explaining}
+    The meaning of Maxwell equations is quite intuitive
+    \begin{itemize}
+        \item Electric Charge Density produces Electric Flux Density (\ref{eq: me D})
+        \item Magnetic Flux Density is non-source field (\ref{eq: me B})
+        \item Changing Magnetic Flux Density produces Electric Field (\ref{eq: me E})
+        \item Changing Electric Flux Density or Current Density produces Magnetic Field (\ref{eq: me H})
+    \end{itemize}
+
+\end{frame}
+\subsection{Example}
 \begin{frame}
     \frametitle{Example}
     In vacuum space, the Maxwell Equations are re-written as
@@ -214,6 +223,12 @@
 \section{Forward and Backward Process}
 
 \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection, hideothersubsections]
+\end{frame}
+
+\subsection{Forward process}
+\begin{frame}
     \frametitle{Forward process}
     \begin{columns}
         \column{0.5\textwidth}
@@ -251,7 +266,7 @@
             \item $40 mm^{2}$ of active cortex
             \item Current $I_{0} = 10 nA$
             \item Source  decays  $d = 0.1 mm$
-            \item Current dipole $P = I0 * d$
+            \item Current dipole $P = I_{0} * d$
         \end{itemize}
 
         \column{0.5\textwidth}
@@ -343,6 +358,7 @@
     \end{figure}
 \end{frame}
 
+\subsection{Backward process}
 \begin{frame}
     \frametitle{Backward process}
     The reverse process of forward process is Backward process.
@@ -370,71 +386,52 @@
 \section{Source Location}
 
 \begin{frame}
-    \frametitle{Formulation}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection, hideothersubsections]
 \end{frame}
 
+\subsection{Co-register}
 \begin{frame}
-    \frametitle{Solution}
-\end{frame}
-
-\section{Slide Samples}
-
-\begin{frame}
-    \frametitle{Items}
+    \frametitle{Co-register}
+    The first thing is to co-register the two coordinate
     \begin{itemize}
-        \item<1-> Text visible on slide 1
-        \item<2-> Text visible on slide 2
-        \item<3> Text visible on slide 3
-        \item<4-> Text visible on slide 4
+        \item The cortex coordinate, where the source currents are
+        \begin{itemize}
+            \item Sphere model
+            \item Structure MRI model
+            \item $\dots$
+        \end{itemize}
+        \item The EEG cap coordinate, where the EEG sensors are
     \end{itemize}
 \end{frame}
 
+\subsection{Gain matrix}
 \begin{frame}
-    \frametitle{Pause}
-    In this slide \pause
-    the text will be partially visible \pause
-    And finally everything will be there
+    \frametitle{Gain matrix}
+    Calculate a \emph{Gain Matrix} using the forward model
+    \begin{equation}
+        Gain Matrix \quad G \in \mathfrak{R}^{m, n}
+    \end{equation}
+    where $m$ is the number of EEG sensors, $n$ is the number of source currents.
+
+    $G_{i, j}$ refers the $\vec{E}$ detected by $i^{th}$ EEG sensor caused by $j^{th}$ source current.
+
+    In another word, the EEG signal were considered as a \emph{linear combination} of source currents.
 \end{frame}
 
+\subsection{Solution}
 \begin{frame}
-    \frametitle{Sample frame title}
+    \frametitle{Solution}
+    The \emph{Source location} problem can be formulated as
+    \begin{equation}
+        \mathop{\arg\min}_{\vec{W}}
+        \left\lVert {\vec{Y} - G \cdot \vec{W}} \right\rVert ^{2} _{2} + loss(\vec{W})
+    \end{equation}
+    where $\vec{Y} \in \mathfrak{R}^{m, 1}$ is the EEG signal, $\vec{W} \in \mathfrak{R}^{n, 1}$ is the strong of source currents.
 
-    In this slide, some important text will be
-    \alert{highlighted} because it's important.
-    Please, don't abuse it.
+    The problem is $\vec{G}$ has more rows than columns, it makes the solution can be variable.
 
-    \begin{block}{Remark}
-        Sample text
-    \end{block}
-
-    \begin{alertblock}{Important theorem}
-        Sample text in red box
-    \end{alertblock}
-
-    \begin{examples}
-        Sample text in green box. The title of the block is ``Examples".
-    \end{examples}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Two-column slide}
-
-    \begin{columns}
-
-        \column{0.5\textwidth}
-        This is a text in first column.
-        $$E=mc^2$$
-        \begin{itemize}
-            \item First item
-            \item Second item
-        \end{itemize}
-
-        \column{0.5\textwidth}
-        This text will be in the second column
-        and on a second through this is a nice looking
-        layout in some cases.
-
-    \end{columns}
+    So, using proper $loss$ function, like \emph{sparse loss} is necessary.
 \end{frame}
 
 \end{document}
