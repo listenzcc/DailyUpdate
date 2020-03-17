@@ -1,0 +1,107 @@
+\documentclass[a4paper]{article}
+\usepackage{amssymb}
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}{Proposition}[section]
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{Geometric Basic}
+\author{listenzcc}
+
+\begin{document}
+
+\maketitle
+
+\abstract
+Not done yet.
+
+\tableofcontents
+
+\section{Prepare knowledge}
+\subsection{Space}
+A \emph{space} is a collection $\mathfrak{C}$ meeting following conditions:
+
+\begin{equation}
+    \begin{aligned}
+        f(\mathbf{a}, \mathbf{b})                  & \in \mathfrak{C} \quad \forall \mathbf{a}, \mathbf{b} \in \mathfrak{C} \\
+        f(\mathbf{a}, \mathbf{o})                  & = \mathbf{a} \quad \exists \mathbf{o} \in \mathfrak{C}                 \\
+        f(a \cdot \mathbf{a} + b \cdot \mathbf{b}) & = a f(\mathbf{a}) + b f(\mathbf{b})
+    \end{aligned}
+\end{equation}
+
+The 3-D space is a classic space, each node in 3-D space can be expressed as $\vec{x} = (x_{1}, x_{2}, x_{3}) \in \mathfrak{R}^{3} $ with a set of axes $(\vec{e}_{1}, \vec{e}_{2}, \vec{e}_{3})$.
+To make sure the system can represent every node in the 3-D space, it requires that $det[\vec{e}_{1}, \vec{e}_{2}, \vec{e}_{3}] \neq 0$.
+
+\subsection{Scalar and vector field}
+A function of space is known as a field.
+Let an arbitrary 3-D coordinate system be given.
+
+If to each position $\vec{x} = (x_{1}, x_{2}, x_{3})$ of a region in space, it corresponds a scalar $\phi (x_{1}, x_{2}, x_{3})$, then $\phi$ is called a \emph{scalar field}.
+Like \emph{density} field.
+
+If to each position $\vec{x} = (x_{1}, x_{2}, x_{3})$ of a region in space, it corresponds a vector $\vec{a} (x_{1}, x_{2}, x_{3})$, then $\vec{a}$ is called a \emph{vector field}.
+Like \emph{velocity} field.
+
+\subsection{Nabla operator $\nabla$}
+Partial derivatives is an useful tool to measure the changes along axes.
+
+For scalar field
+\begin{equation}
+    \partial_{i} \phi = \frac{\partial}{\partial x_{i}} \phi
+\end{equation}
+
+For vector field
+\begin{equation}
+    (\partial_{i} \vec{a}) (\vec{r}) = \lim_{\Delta x_{i} \rightarrow 0} \frac{\vec{a}(\vec{r} + \Delta x_{i} \vec{e}_{i}) - \vec{a}(\vec{r})}{\Delta x_{i}}
+\end{equation}
+
+To simplify the partial derivatives, we imply \emph{Nabla operator}.
+\begin{equation}
+    \nabla (\cdot) = \sum_{i} \vec{e}_{i} \partial_{i} (\cdot)
+\end{equation}
+
+\subsection{Gradient, Divergence and Curl}
+Gradient, Divergence and Curl are three basic and important measurement of spatial changes of the field.
+\paragraph{Gradient}
+\begin{equation}
+    grad \phi = \nabla \phi = \sum_{i} \vec{e}_{i} \partial_{i} \phi
+\end{equation}
+
+\paragraph{Divergence}
+\begin{equation}
+    div \vec{a} = \nabla \cdot \vec{a} = \sum_{i} \partial_{i} \vec{a}
+\end{equation}
+
+\paragraph{Curl}
+\begin{equation}
+    curl \vec{a} = \nabla \times \vec{a} = det
+    \begin{pmatrix}
+        \vec{e}_{1}  & \vec{e}_{1}  & \vec{e}_{1}  \\
+        \partial_{1} & \partial_{1} & \partial_{1} \\
+        \vec{a}_{1}  & \vec{a}_{1}  & \vec{a}_{1}
+    \end{pmatrix}
+\end{equation}
+
+\begin{theorem}
+    Gradient, Divergence and Curl following the equations.
+    \begin{equation}
+        \begin{aligned}
+            \nabla (\phi + \psi)                  & = \nabla \phi + \nabla \psi                                                     \\
+            \nabla \cdot (\vec{a} + \vec{b})      & = \nabla \cdot \vec{a} + \nabla \cdot \vec{b}                                   \\
+            \nabla \times (\vec{a} + \vec{b})     & = \nabla \times \vec{a} + \nabla \times \vec{b}                                 \\
+            \nabla \cdot (\phi \vec{a})           & = \phi \nabla \cdot \vec{a} + \vec{a} \cdot \nabla \phi                         \\
+            \nabla \cdot (\vec{a} \times \vec{b}) & = \vec{b} \cdot (\nabla \times \vec{a}) - \vec{a} \cdot (\nabla \times \vec{b}) \\
+            \nabla \times (\nabla \times \vec{a}) & = \nabla (\nabla \cdot \vec{a}) - \nabla^{2} \vec{a}                            \\
+            \nabla \cdot (\nabla \times \vec{a})  & = 0                                                                             \\
+            \nabla \times \nabla \phi             & = 0
+        \end{aligned}
+    \end{equation}
+
+    The interesting things are the divergence of curl is zero, and the curl of gradient is zero.
+\end{theorem}
+\end{document}
