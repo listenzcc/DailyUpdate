@@ -269,13 +269,19 @@ When the condition is not met, we have
 \begin{equation}
     H^{'}(X) = - \int_{X} p(x) \log{q(x)} dx
 \end{equation}
-where the new entropy is definitely not smaller than the original one of $Q(X)$. The subtraction is \emph{Relative Entropy}
+where the new entropy is definitely not smaller than the original one of $Q(X)$.
+The subtraction is \emph{Relative Entropy}
 \begin{equation}
     H_{q \mapsto p} = \int_{X} p(x) \log{\frac{p(x)}{q(x)}} dx
     \label{eq: Relative Entropy}
 \end{equation}
 
-In practice, the Relative Entropy is widely used for measuring the \emph{distance} between two distributions. The smaller value of Relative Entropy, the closer. The minimal value of Relative Entropy is $0$.
+In practice, the Relative Entropy is widely used for measuring the \emph{distance} between two distributions.
+The smaller value of Relative Entropy is, the closer.
+
+The symbol of relative entropy is also defined as $D(p||q)$, with the same meaning as $H_{q \mapsto p}$.
+\emph{The additional code length using $q$ to simulate $p$.}
+The minimal value of Relative Entropy is $0$.
 
 \subsection{Non-negative}
 
@@ -290,15 +296,18 @@ In practice, the Relative Entropy is widely used for measuring the \emph{distanc
         \begin{equation*}
             H_{q \mapsto p} = - \int_{X} p(x) \log{\frac{q(x)}{p(x)}} dx
         \end{equation*}
-        since $\log{}$ is convex function, we have
+        use the inequation that is
         \begin{equation*}
-            \log{\sum{x, y, \dots}} \geqslant \sum{\log(x), \log(y), \dots}
+            log(x) \leqslant x-1, (x > 0)
         \end{equation*}
-        thus we can exchange the $\log{}$ outside the integral, and transform the equational into following
+        thus, we have
         \begin{equation*}
-            H_{q \mapsto p} \geqslant - \log{\int_{X} p(x) \frac{q(x)}{p(x)} dx}
+            -log(\frac{q(x)}{p(x)}) \geqslant 1 - \frac{q(x)}{p(x)}
         \end{equation*}
-        use the trivial condition that $\int_{X} q(x) dx \leqslant 1$ and $\log{1} = 0$, we have $H_{q \mapsto p} \geqslant 0$.
+        then,
+        \begin{equation*}
+            H_{q \mapsto p} \geqslant \int_{X} p(x) - q(x) dx = 0
+        \end{equation*}
         Hence proved.
     \end{proof}
 \end{theorem}
