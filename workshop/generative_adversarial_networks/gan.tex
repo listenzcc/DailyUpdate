@@ -1,0 +1,147 @@
+\documentclass[a4paper]{article}
+
+\usepackage{amssymb}
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{proposition}{Proposition}[section]
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\title{Generative Adversarial Networks}
+\author{listenzcc}
+
+\begin{document}
+
+\maketitle
+
+\abstract
+Not done yet.
+
+\tableofcontents
+
+\section{Real and Fake samples}
+Generative Adversarial Networks (GAN) can generate \emph{FAKE} samples using adversarial learning algorithm.
+GAN has been widely used for extending new samples or stylize a given sample.
+The aim is to make the fake samples following the same distribution with \emph{REAL} samples.
+
+GAN has two parts, \emph{Generator} ($G$) and \emph{Discriminator} ($D$).
+The generator is to generate \emph{FAKE} samples, the discriminator is to detect them.
+Thus, $G$ and $D$ are adversarial.
+The question is how GAN works.
+
+\section{Discriminator}
+A \emph{Discriminator} is a two-classes classifier $D(x)$ that gives $1$ for \emph{REAL} sample and $0$ for \emph{FAKE} one.
+Thus, the loss function of a discriminator is
+\begin{equation}
+    - \mathbb{E}_{x\sim P_r} [\log{D(x)}]
+    - \mathbb{E}_{x\sim P_g} [\log{(1-D(x))}]
+    \label{eq:D_loss}
+\end{equation}
+where $P_r$ and $P_g$ are the probability of an image $x$ belongs to \emph{REAL} and \emph{FAKE} distributions.
+
+To a given generator, the loss caused by an image is
+\begin{equation}
+    \mathcal{L}{(x)} =
+    - P_r(x) \log{D(x)}
+    - P_g(x) \log{(1-D(x))}
+\end{equation}
+
+\begin{lemma}
+    The optimal discriminator of a given image $x$ is
+    \begin{equation*}
+        D^*(x) = \frac{P_r(x)}{P_r(x) + P_g(x)}
+    \end{equation*}
+
+    \begin{proof}
+        Note the loss function as $\mathcal{L}$, we have
+        \begin{equation*}
+            \begin{aligned}
+                \frac{\partial}{\partial D} \mathcal{L}     & =
+                - \frac{P_r(x)}{D(x)}
+                + \frac{P_g(x)}{1-D(x)}                         \\
+                \frac{\partial}{\partial^2 D} \mathcal{L}^2 & =
+                \frac{P_r(x)}{D^2(x)}
+                - \frac{P_g(x)}{(1-D(x))^2}
+            \end{aligned}
+        \end{equation*}
+        One solution that minimizes the $\mathcal{L}$ is
+        \begin{equation*}
+            D^*(x) = \frac{P_r(x)}{P_r(x) + P_g(x)}
+        \end{equation*}
+        when $P_r(x) \leqslant P_g(x)$, we have $\frac{\partial}{\partial^2 D} \mathcal{L}^2 \geqslant 0$.
+        Which guarantees that $D^*(x)$ is the minimization solution.
+
+        Hence proved.
+    \end{proof}
+\end{lemma}
+
+\section{Generator}
+The loss function of generator can be like
+\begin{equation}
+    \mathbb{E}_{x\sim P_g} [\log{(1-D(x))}]
+    \label{eq:G_loss0}
+\end{equation}
+the aim is to deceive the discriminator makes $D(x) = 1$.
+
+The (\ref{eq:G_loss0}) can be rewritten as following by adding an \emph{irrelevant} factor
+\begin{equation}
+    \mathbb{E}_{x\sim P_r} [\log{D(x)}]
+    + \mathbb{E}_{x\sim P_g} [\log{(1-D(x))}]
+    \label{eq:G_loss}
+\end{equation}
+it is easy to see that (\ref{eq:G_loss0}) and (\ref{eq:G_loss}) are equal.
+We can also see that (\ref{eq:G_loss}) is the reverse of (\ref{eq:D_loss}).
+
+\begin{lemma}
+    Under optimal discriminator $D^*(x)$ The (\ref{eq:G_loss}) can be written as
+    \begin{equation*}
+        2 JS(P_r \Vert P_g) - 2 \log{2}
+    \end{equation*}
+    \begin{proof}
+        Start by defining two measurements, $KL$ divergence and $JS$ divergence.
+        \begin{equation*}
+            \begin{aligned}
+                KL(P_1 \Vert P_2)   & = \mathbb{E}_{x\sim P_1} \log{\frac{P_1}{P_2}}                      \\
+                2 JS(P_1 \Vert P_2) & = KL(P_1 \Vert \frac{P_1+P_2}{2}) + KL(P_2 \Vert \frac{P_1+P_2}{2})
+            \end{aligned}
+        \end{equation*}
+
+        Re-write (\ref{eq:G_loss}) under $D^*(x)$
+        \begin{equation*}
+            \mathbb{E}_{x\sim P_r} \log{\frac{2 P_r(x)}{P_r(x) + P_g(x)}}
+            + \mathbb{E}_{x\sim P_g} \log{\frac{2 P_g(x)}{P_r(x) + P_g(x)}}
+            - 2 \log {2}
+        \end{equation*}
+
+        Hence proved.
+    \end{proof}
+    \label{le:G_loss_in_JS}
+\end{lemma}
+
+Use Lemma \ref{le:G_loss_in_JS} we can conclude that under optimized discriminator, the training of the generator equals to minimize the JS divergence between $P_r$ and $P_g$.
+
+\subsection{Gradient vanishing in generator}
+In high dimensional space, where the support set of the data \emph{MANIFOLD} is smaller than the space.
+The $JS$ divergence is $0$ at almost for all the images.
+It results that the metric is almost $0$
+\begin{equation}
+    \int P_r(x) P_g(x) dx \approx 0
+\end{equation}
+it shows that either $P_r$ or $P_g$ is $0$ for almost every image in the space.
+As a result, the gradient of (\ref{eq:G_loss}) is vanishing under $D^*$.
+
+\subsection{Log D trick}
+One solution to gradient vanishing is $\log D$ trick.
+It changes the (\ref{eq:G_loss0}) into
+\begin{equation}
+    \mathbb{E}_{x\sim P_g} [- \log{D(x)}]
+\end{equation}
+
+\subsection{Instable of generator}
+
+\end{document}
+
