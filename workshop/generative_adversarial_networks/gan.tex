@@ -34,12 +34,14 @@ Thus, $G$ and $D$ are adversarial.
 The question is how GAN works.
 
 \section{Discriminator}
+
+\subsection{Definition}
+
 A \emph{Discriminator} is a two-classes classifier $D(x)$ that gives $1$ for \emph{REAL} sample and $0$ for \emph{FAKE} one.
 Thus, the loss function of a discriminator is
-\begin{equation}
+\begin{equation} \label{eq:D_loss}
     - \mathbb{E}_{x\sim P_r} [\log{D(x)}]
     - \mathbb{E}_{x\sim P_g} [\log{(1-D(x))}]
-    \label{eq:D_loss}
 \end{equation}
 where $P_r$ and $P_g$ are the probability of an image $x$ belongs to \emph{REAL} and \emph{FAKE} distributions.
 
@@ -50,11 +52,13 @@ To a given generator, the loss caused by an image is
     - P_g(x) \log{(1-D(x))}
 \end{equation}
 
-\begin{lemma}
+\subsection{Optimal discriminator}
+
+\begin{theorem}
     The optimal discriminator of a given image $x$ is
-    \begin{equation*}
+    \begin{equation} \label{eq:Optimal_D}
         D^*(x) = \frac{P_r(x)}{P_r(x) + P_g(x)}
-    \end{equation*}
+    \end{equation}
 
     \begin{proof}
         Note the loss function as $\mathcal{L}$, we have
@@ -77,54 +81,96 @@ To a given generator, the loss caused by an image is
 
         Hence proved.
     \end{proof}
-\end{lemma}
+\end{theorem}
 
 \section{Generator}
+
+\subsection{Definition}
+
 The loss function of generator can be like
-\begin{equation}
+\begin{equation} \label{eq:G_loss0}
     \mathbb{E}_{x\sim P_g} [\log{(1-D(x))}]
-    \label{eq:G_loss0}
 \end{equation}
-the aim is to deceive the discriminator makes $D(x) = 1$.
-
-The (\ref{eq:G_loss0}) can be rewritten as following by adding an \emph{irrelevant} factor
-\begin{equation}
-    \mathbb{E}_{x\sim P_r} [\log{D(x)}]
-    + \mathbb{E}_{x\sim P_g} [\log{(1-D(x))}]
-    \label{eq:G_loss}
+or
+\begin{equation} \label{eq:G_loss1}
+    \mathbb{E}_{x\sim P_g} [\log{(-D(x))}]
 \end{equation}
-it is easy to see that (\ref{eq:G_loss0}) and (\ref{eq:G_loss}) are equal.
-We can also see that (\ref{eq:G_loss}) is the reverse of (\ref{eq:D_loss}).
+the aim is to deceive the discriminator makes $D(x) = 1$ when $x \sim P_g$.
 
-\begin{lemma}
-    Under optimal discriminator $D^*(x)$ The (\ref{eq:G_loss}) can be written as
+\subsection{Loss function under optimal discriminator}
+
+The relationship between loss function and $KL$ and $JS$ divergence is rather close.
+
+\begin{theorem} \label{th:JS_Gloss}
+    Under optimal discriminator $D^*(x)$, the (\ref{eq:G_loss0}) equals to $JS$ divergence plus a constant.
     \begin{equation*}
-        2 JS(P_r \Vert P_g) - 2 \log{2}
+        \mathbb{E}_{x\sim P_g} [\log{(1-D^*(x))}]
+        = 2 JS(P_r \Vert P_g) - 2 \log{2}
+        - \mathbb{E}_{x\sim P_r} [\log{D^*(x)}]
     \end{equation*}
+
     \begin{proof}
         Start by defining two measurements, $KL$ divergence and $JS$ divergence.
-        \begin{equation*}
+        \begin{equation} \label{eq:KL_JS}
             \begin{aligned}
                 KL(P_1 \Vert P_2)   & = \mathbb{E}_{x\sim P_1} \log{\frac{P_1}{P_2}}                      \\
                 2 JS(P_1 \Vert P_2) & = KL(P_1 \Vert \frac{P_1+P_2}{2}) + KL(P_2 \Vert \frac{P_1+P_2}{2})
             \end{aligned}
+        \end{equation}
+
+        Recall (\ref{eq:Optimal_D}) we have
+        \begin{equation*}
+            \begin{aligned}
+                \mathbb{E}_{x\sim P_r}[\log{D^*(x)}]     & = \mathbb{E}_{x\sim P_r}[\log{\frac{P_r(x)}{P_r(x)+ P_g(x)}}] \\
+                \mathbb{E}_{x\sim P_g}[\log{(1-D^*(x))}] & = \mathbb{E}_{x\sim P_g}[\log{\frac{P_g(x)}{P_r(x)+ P_g(x)}}]
+            \end{aligned}
         \end{equation*}
 
-        Re-write (\ref{eq:G_loss}) under $D^*(x)$
+        Use (\ref{eq:KL_JS}) we have
         \begin{equation*}
-            \mathbb{E}_{x\sim P_r} \log{\frac{2 P_r(x)}{P_r(x) + P_g(x)}}
-            + \mathbb{E}_{x\sim P_g} \log{\frac{2 P_g(x)}{P_r(x) + P_g(x)}}
-            - 2 \log {2}
+            \begin{aligned}
+                \mathbb{E}_{x\sim P_r}[\log{D^*(x)}]     & = KL(P_r \Vert \frac{P_r+P_g}{2}) - \log{2} \\
+                \mathbb{E}_{x\sim P_g}[\log{(1-D^*(x))}] & = KL(P_g \Vert \frac{P_r+P_g}{2}) - \log{2}
+            \end{aligned}
+        \end{equation*}
+
+        Adding above equations leads to
+        \begin{equation*}
+            \mathbb{E}_{x\sim P_r}[\log{D^*(x)}] + \mathbb{E}_{x\sim P_g}[\log{(1-D^*(x))}]
+            = 2 JS(P_r \Vert P_g) - 2 \log{2}
         \end{equation*}
 
         Hence proved.
     \end{proof}
-    \label{le:G_loss_in_JS}
-\end{lemma}
 
-Use Lemma \ref{le:G_loss_in_JS} we can conclude that under optimized discriminator, the training of the generator equals to minimize the JS divergence between $P_r$ and $P_g$.
+\end{theorem}
 
-\subsection{Gradient vanishing in generator}
+\begin{theorem} \label{th:KL_Gloss}
+    Under optimal discriminator $D^*(x)$, the (\ref{eq:G_loss0}) and (\ref{eq:G_loss1}) are related by $KL$ divergence.
+    \begin{equation*}
+        \mathbb{E}_{x\sim P_g}[\log {(-D^*(x))}]
+        = KL(P_g \Vert P_r)
+        - \mathbb{E}_{x\sim P_g}[\log {(1-D^*(x))}]
+    \end{equation*}
+
+    \begin{proof}
+        \begin{equation*}
+            \begin{aligned}
+                KL(P_g \Vert P_r) & = \mathbb{E}_{x\sim P_g}[\log {\frac{P_g(x)}{P_r(x)}}]   \\
+                                  & = \mathbb{E}_{x\sim P_g}[\log {\frac{1-D^*(x)}{D^*(x)}}] \\
+                                  & = \mathbb{E}_{x\sim P_g}[\log {1-D^*(x)}]
+                - \mathbb{E}_{x\sim P_g}[\log {D^*(x)}]
+            \end{aligned}
+        \end{equation*}
+
+        Hence proved.
+    \end{proof}
+
+\end{theorem}
+
+Use Theorem \ref{th:JS_Gloss} we can conclude that under optimized discriminator, the training of the generator equals to minimize the JS divergence between $P_r$ and $P_g$.
+
+\subsection{Gradient vanishing}
 In high dimensional space, where the support set of the data \emph{MANIFOLD} is smaller than the space.
 The $JS$ divergence is $0$ at almost for all the images.
 It results that the metric is almost $0$
@@ -132,16 +178,65 @@ It results that the metric is almost $0$
     \int P_r(x) P_g(x) dx \approx 0
 \end{equation}
 it shows that either $P_r$ or $P_g$ is $0$ for almost every image in the space.
-As a result, the gradient of (\ref{eq:G_loss}) is vanishing under $D^*$.
+It makes $JS$ divergence drops to $0$, which means gradient vanishes.
+As a result, the gradient of (\ref{eq:G_loss0}) is vanishing under $D^*$.
 
 \subsection{Log D trick}
 One solution to gradient vanishing is $\log D$ trick.
-It changes the (\ref{eq:G_loss0}) into
-\begin{equation}
-    \mathbb{E}_{x\sim P_g} [- \log{D(x)}]
-\end{equation}
+It changes the (\ref{eq:G_loss0}) into (\ref{eq:G_loss1}).
 
-\subsection{Instable of generator}
+\begin{theorem}
+    Minimizing (\ref{eq:G_loss1}) under optimized discriminator $D^*(x)$ is equals to minimizing following
+    \begin{equation}
+        KL(P_g \Vert P_r) - 2 JS(P_r \Vert P_g)
+    \end{equation}
+
+    \begin{proof}
+        Combining theorem \ref{th:JS_Gloss}, theorem \ref{th:KL_Gloss} and (\ref{eq:G_loss1}), we can proof.
+
+        Begin with theorem \ref{th:KL_Gloss},
+        \begin{equation*}
+            \mathbb{E}_{x\sim P_g}[\log {(-D^*(x))}]
+            = KL(P_g \Vert P_r)
+            - \mathbb{E}_{x\sim P_g}[\log {(1-D^*(x))}]
+        \end{equation*}
+
+        Use theorem \ref{th:JS_Gloss},
+        \begin{equation*}
+            \begin{aligned}
+                \mathbb{E}_{x\sim P_g}[\log {(-D^*(x))}]
+                 & = KL(P_g \Vert P_r) - 2 JS(P_r \Vert P_g)                     \\
+                 & \qquad + 2 \log{2} + \mathbb{E}_{x\sim P_r[\log {(-D^*(x))}]}
+            \end{aligned}
+        \end{equation*}
+
+        It is obvious that the latter two factors is irrelevant with the generator.
+
+        Hence proved.
+    \end{proof}
+
+\end{theorem}
+
+It results a conflict that the optimization process requires $KL$ divergence to be smaller when $JS$ divergence to be larger at the same time.
+Thus, it causes unstable of the learning process.
+
+\subsection{Instable}
+The instability is mainly because of the asymmetric of the $KL$ divergence.
+Recall the definition of $KL$ divergence (\ref{eq:KL_JS}), we have two different situations:
+
+
+\item ZERO:
+When $P_g(x) \rightarrow 0$ and $P_r(x) \rightarrow 1$, we have
+\begin{equation*}
+    P_g(x) \log \frac{P_g(x)}{P_r(x)} \rightarrow 0
+\end{equation*}
+
+\item INFINITY:
+When $P_g(x) \rightarrow 1$ and $P_r(x) \rightarrow 0$, we have
+\begin{equation*}
+    P_g(x) \log \frac{P_g(x)}{P_r(x)} \rightarrow +\infty
+\end{equation*}
+
 
 \end{document}
 
